@@ -234,8 +234,13 @@ namespace PDF_Search
                     
 
                     //Usefull for debug
-                    Console.Write(">" + renderInfo.GetText() + " (y=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I2) + ", x=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I1) + ")");
-                    Console.WriteLine(renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1));
+                    Console.WriteLine(">" + renderInfo.GetText() + 
+                        " (y=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I2) + 
+                        ", x=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I1) +
+                        ", y=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I2) +
+                        ", x'=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1) +
+                        ")");
+                    //Console.WriteLine(renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1));
                 }
             }
         }
@@ -320,12 +325,9 @@ namespace PDF_Search
                     PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(filePath));
                     Console.WriteLine("New PDF doc created");
                     analyzeTextExtractionStrategy textAnalysis = new analyzeTextExtractionStrategy();
-                    Console.WriteLine("Tutu");
                     //textExtraction2.searchText = theSearch.SearchLabel;
                     PdfTextExtractor.GetTextFromPage(pdfDoc2.GetPage(1), textAnalysis);
-
-                    Console.WriteLine("Toto");
-
+                    
                     break;
                 case "-search":
                     try
