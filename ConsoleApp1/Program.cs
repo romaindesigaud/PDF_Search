@@ -251,7 +251,9 @@ namespace PDF_Search
                             topRight.Get(Vector.I1),
                             topRight.Get(Vector.I2)
                         );
-                    
+
+
+                    myPoints.Add(new RectAndText(myRect, renderInfo.GetText()));
 
                     //Usefull for debug
                     //Console.WriteLine(">>" + renderInfo.GetText() + 
@@ -265,10 +267,10 @@ namespace PDF_Search
                 //Console.WriteLine(textBoxes.Count);
             }
 
-            public List<TextBox> GetTextBoxes() {
-                return textBoxes;
+            //public List<TextBox> GetTextBoxes() {
+            //    //return textBoxes;
             
-            }
+            //}
         }
 
         protected class BoxFinderTextExtractionStrategy : LocationTextExtractionStrategy
@@ -356,7 +358,14 @@ namespace PDF_Search
                     analyzeTextExtractionStrategy textAnalysis = new analyzeTextExtractionStrategy();
                     //textExtraction2.searchText = theSearch.SearchLabel;
                     PdfTextExtractor.GetTextFromPage(pdfDoc2.GetPage(1), textAnalysis);
-                    
+
+                    Console.WriteLine("How many textboxes found: " + textAnalysis.myPoints.Count);
+                    Console.WriteLine("-------------------------------" );
+                    foreach (RectAndText textbox in textAnalysis.myPoints)
+                    {
+                        Console.WriteLine(textbox.Text + "(" + textbox.Rect.GetX() + ", " + textbox.Rect.GetY()+")");
+                    }
+
                     break;
                 case "-search":
                     try
