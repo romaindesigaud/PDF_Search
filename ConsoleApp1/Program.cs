@@ -62,6 +62,24 @@ namespace PDF_Search
 
         }
 
+        public class TextBox
+        {
+
+            public TextBox(float theX, float theY, float theX2, float theY2, string theText) {
+                this.x = theX;
+                this.y = theY;
+                this.x2 = theX2;
+                this.y2 = theY2;
+                this.text = theText;
+            }
+            public float x { get; set; }
+            public float y { get; set; }
+            public float x2 { get; set; }
+            public float y2 { get; set; }
+            public string text { get; set; }
+
+        }
+
         public class SearchConfig
         {
             public string TemplateName { get; set; }
@@ -215,7 +233,6 @@ namespace PDF_Search
 
             public override void EventOccurred(IEventData data, EventType type)
             {
-                
                 //Console.WriteLine(type.ToString());
                 if (type.Equals(EventType.RENDER_TEXT))
                 {
@@ -234,8 +251,7 @@ namespace PDF_Search
                             topRight.Get(Vector.I1),
                             topRight.Get(Vector.I2)
                         );
-
-                    myPoints.Add(new RectAndText(myRect, renderInfo.GetText()));
+                    
 
                     //Usefull for debug
                     //Console.WriteLine(">>" + renderInfo.GetText() + 
@@ -246,6 +262,12 @@ namespace PDF_Search
                     //    ")");
                     //Console.WriteLine(renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1));
                 }
+                //Console.WriteLine(textBoxes.Count);
+            }
+
+            public List<TextBox> GetTextBoxes() {
+                return textBoxes;
+            
             }
         }
 
@@ -296,6 +318,9 @@ namespace PDF_Search
         static void Main(string[] args)
         {
 
+            
+            
+
             // First, checking if we received parameters
             if (args.Length == 0)
             {
@@ -331,16 +356,7 @@ namespace PDF_Search
                     analyzeTextExtractionStrategy textAnalysis = new analyzeTextExtractionStrategy();
                     //textExtraction2.searchText = theSearch.SearchLabel;
                     PdfTextExtractor.GetTextFromPage(pdfDoc2.GetPage(1), textAnalysis);
-
-                    Console.WriteLine("How many textboxes: " + textAnalysis.myPoints.Count);
                     
-                    foreach (RectAndText point in textAnalysis.myPoints)
-                    {
-                        Console.Write("Textbox: " + point.Text);
-                        Console.WriteLine(" (" + point.Rect.GetX()+" / " + point.Rect.GetY() + " / " + point.Rect.GetWidth() +")");
-                    }
-
-
                     break;
                 case "-search":
                     try
