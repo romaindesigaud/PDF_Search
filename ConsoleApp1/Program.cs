@@ -210,6 +210,9 @@ namespace PDF_Search
 
         protected class analyzeTextExtractionStrategy : LocationTextExtractionStrategy
         {
+
+            public List<RectAndText> myPoints = new List<RectAndText>();
+
             public override void EventOccurred(IEventData data, EventType type)
             {
                 
@@ -231,15 +234,16 @@ namespace PDF_Search
                             topRight.Get(Vector.I1),
                             topRight.Get(Vector.I2)
                         );
-                    
+
+                    myPoints.Add(new RectAndText(myRect, renderInfo.GetText()));
 
                     //Usefull for debug
-                    Console.WriteLine(">" + renderInfo.GetText() + 
-                        " (y=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I2) + 
-                        ", x=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I1) +
-                        ", y=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I2) +
-                        ", x'=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1) +
-                        ")");
+                    //Console.WriteLine(">>" + renderInfo.GetText() + 
+                    //    " (y=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I2) + 
+                    //    ", x=" + renderInfo.GetDescentLine().GetStartPoint().Get(Vector.I1) +
+                    //    ", y=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I2) +
+                    //    ", x'=" + renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1) +
+                    //    ")");
                     //Console.WriteLine(renderInfo.GetDescentLine().GetEndPoint().Get(Vector.I1));
                 }
             }
@@ -327,7 +331,16 @@ namespace PDF_Search
                     analyzeTextExtractionStrategy textAnalysis = new analyzeTextExtractionStrategy();
                     //textExtraction2.searchText = theSearch.SearchLabel;
                     PdfTextExtractor.GetTextFromPage(pdfDoc2.GetPage(1), textAnalysis);
+
+                    Console.WriteLine("How many textboxes: " + textAnalysis.myPoints.Count);
                     
+                    foreach (RectAndText point in textAnalysis.myPoints)
+                    {
+                        Console.Write("Textbox: " + point.Text);
+                        Console.WriteLine(" (" + point.Rect.GetX()+" / " + point.Rect.GetY() + " / " + point.Rect.GetWidth() +")");
+                    }
+
+
                     break;
                 case "-search":
                     try
