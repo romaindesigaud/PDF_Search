@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 //using iText.Layout.Element;
 using Microsoft.SharePoint.Client;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 
 namespace PDF_Search
@@ -368,6 +369,8 @@ namespace PDF_Search
                         Console.WriteLine(textbox.Text + "(x:" + textbox.Rect.GetX() + "/y:" + textbox.Rect.GetY()+"/w:"+textbox.Rect.GetWidth() + "/h:" + textbox.Rect.GetHeight() + ")");
                     }
 
+                    workAssay(textAnalysis.myPoints);
+
                     break;
                 case "-search":
                     try
@@ -543,6 +546,45 @@ namespace PDF_Search
             //    if (toto.Equals("k")) { break; };
             //    Console.WriteLine(toto.Key);
             //}
+
+        }
+
+        private static void workAssay(List<RectAndText> texts) {
+
+            Console.WriteLine("============================================================");
+
+            
+            // 1. go get all the lot numbers
+            List<RectAndText> lotNumbers = texts.FindAll(cc => cc.Text.StartsWith("LOT NUMBER"));
+            List<RectAndText> lotCobalt = texts.FindAll(cc => cc.Text.StartsWith("COBALT"));
+            
+            // 2. find the last decimal from the last lot number = how many lots we have
+            RectAndText lastLot = new RectAndText(new Rectangle(10000,100000,10000,10000),"");            
+            foreach (var text in lotNumbers)
+            {
+                if (text.Rect.GetY() < lastLot.Rect.GetY()) {
+                    lastLot = text;
+                }
+            }
+            Console.WriteLine(lastLot.Text);
+            lastLot.Text = lastLot.Text.Replace('\u00A0'.ToString(), " ");
+            lastLot.Text = lastLot.Text.Replace("  ", "|");
+            char[] separators = new char[] { '|'};
+            string[] words = lastLot.Text.Trim().Split( separators, StringSplitOptions.RemoveEmptyEntries);
+
+            //Console.WriteLine("-->"+lastLot.Text.ElementAt(50).ToString()+"<--");
+            //Console.WriteLine((int)lastLot.Text.ElementAt(50));
+            //Console.WriteLine(lastLot.Text.Contains('\u00A0'));
+
+            Console.WriteLine("titi: "+ words.Length);
+            Console.WriteLine("toto: " + words[words.Length - 1]);
+
+            foreach (var word in words)
+            {
+                Console.WriteLine("word: " + word);
+            }
+
+            //Console.WriteLine(texts.Find(cc => cc.Text.StartsWith("LOT NUMBER")).Rect.GetX());
 
         }
 
