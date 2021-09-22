@@ -359,11 +359,13 @@ namespace PDF_Search
                     //textExtraction2.searchText = theSearch.SearchLabel;
                     PdfTextExtractor.GetTextFromPage(pdfDoc2.GetPage(1), textAnalysis);
 
-                    Console.WriteLine("How many textboxes found: " + textAnalysis.myPoints.Count);
+                    Console.WriteLine(textAnalysis.myPoints.FindAll(x => x.Rect.GetY() == 220.34).Count());
+
+                    Console.WriteLine(textAnalysis.myPoints.Count + " textboxe(s) found");
                     Console.WriteLine("-------------------------------" );
                     foreach (RectAndText textbox in textAnalysis.myPoints)
                     {
-                        Console.WriteLine(textbox.Text + "(" + textbox.Rect.GetX() + ", " + textbox.Rect.GetY()+")");
+                        Console.WriteLine(textbox.Text + "(x:" + textbox.Rect.GetX() + "/y:" + textbox.Rect.GetY()+"/w:"+textbox.Rect.GetWidth() + "/h:" + textbox.Rect.GetHeight() + ")");
                     }
 
                     break;
@@ -531,12 +533,16 @@ namespace PDF_Search
                     break;
             }
 
-            while (true)
-            {
-                ConsoleKeyInfo toto = Console.ReadKey();
-                if (toto.Equals("k")) { break; };
-                Console.WriteLine(toto.Key);
-            }
+            Console.WriteLine("Press any key to close...");
+            Console.ReadKey();
+
+            //while (true)
+            //{
+
+            //    ConsoleKeyInfo toto = Console.ReadKey();
+            //    if (toto.Equals("k")) { break; };
+            //    Console.WriteLine(toto.Key);
+            //}
 
         }
 
